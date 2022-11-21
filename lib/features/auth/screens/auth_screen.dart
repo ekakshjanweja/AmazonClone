@@ -93,6 +93,13 @@ class _AuthScreenState extends State<AuthScreen> {
                     CustomTextField(
                       controller: _emailControlller,
                       hintText: 'Email',
+                    ),
+
+                    //Name TextField
+
+                    CustomTextField(
+                      controller: _nameController,
+                      hintText: 'Name',
                     )
                   ],
                 ),
