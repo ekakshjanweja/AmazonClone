@@ -15,18 +15,28 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: CustomText.h5(context, Colors.black54),
-        border: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: GlobalVariables.blackColor.withOpacity(0.5),
+    return Container(
+      color: GlobalVariables.greyBackgroundColor,
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: CustomText.h5(context, Colors.black54),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(
+                MediaQuery.of(context).size.height * 0.01),
+            borderSide: BorderSide(
+              color: GlobalVariables.blackColor.withOpacity(0.5),
+            ),
           ),
         ),
+        validator: (val) {
+          if (val == null || val.isEmpty) {
+            return 'Enter your $hintText';
+          }
+          return null;
+        },
       ),
-      validator: (val) {},
     );
   }
 }
