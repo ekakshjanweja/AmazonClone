@@ -1,10 +1,10 @@
 const express = require("express");
 const User = require("../models/user");
 const bcryptjs = require("bcryptjs");
-
 const authRouter = express.Router();
+const jwt = require("jsonwebtoken");
 
-//SIGN UP ROUTE 
+//SIGN UP ROUTE
 
 authRouter.post("/api/signup", async (req, res) => {
   try {
@@ -20,7 +20,7 @@ authRouter.post("/api/signup", async (req, res) => {
     }
 
     const hashedPassword = await bcryptjs.hash(password, 8);
-    
+
     //8 is a salt used in hashing of the password
 
     let user = new User({
@@ -33,6 +33,34 @@ authRouter.post("/api/signup", async (req, res) => {
     res.json(user);
   } catch (e) {
     res.status(500).json({ error: e.message });
+  }
+});
+
+//SIGN IN ROUTE
+
+authRouter.post("/api/signin", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email: email });
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ msg: "User with this email does'nt exist." });
+    }
+
+    const isPasswordMatch = bcryptjs.compare(password, user.password);
+
+    if (!isPasswordMatch) {
+      return res.status(400).json({ msg: "Incorrect password." });
+    }
+
+    const token = jwt.sign({ id: user._id }, "passwordKey");
+
+    res.json({ token, ...user._doc });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
